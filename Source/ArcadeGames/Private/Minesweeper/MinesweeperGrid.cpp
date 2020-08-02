@@ -2,6 +2,7 @@
 
 
 #include "MinesweeperGrid.h"
+#include "Minefield.h"
 
 AMinesweeperGrid::AMinesweeperGrid()
 {
