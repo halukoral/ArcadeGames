@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tile.h"
-#include "TileReminder.h"
+#include "Components/ArrowComponent.h"
 #include "StackSpawner.generated.h"
 
 UCLASS()
@@ -18,7 +18,7 @@ private:
 	FVector SetColor();
 	FVector GetColor();
 	void SpawnTile();
-	void MoveTile(float deltaTime, float speed);
+	void MoveTile(float deltaTime);
 	void EndGame();
 	bool IntersectionRight(float& remainderScaleY);
 	bool IntersectionLeft(float& remainderScaleX);
@@ -42,7 +42,10 @@ public:
 	void StackFire();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float speed = 120.f;
+	float Speed = 120.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int SpeedUpCount = 5;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCanMove;
@@ -81,6 +84,7 @@ public:
 	TSubclassOf<ATile> TileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<ATileReminder> RemainderClass;
+	TSubclassOf<ATile> ReminderClass;
 
+	int iCount = 0;
 };

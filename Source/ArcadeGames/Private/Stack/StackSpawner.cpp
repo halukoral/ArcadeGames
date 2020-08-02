@@ -50,7 +50,7 @@ void AStackSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if(CurrentTile && bCanMove)
-		MoveTile(DeltaTime, speed);
+		MoveTile(DeltaTime);
 
 }
 
@@ -91,6 +91,12 @@ void AStackSpawner::SpawnTile() {
 		}
 	}
 
+	++iCount;
+	if (iCount % SpeedUpCount == 0 && iCount != 0)
+	{
+		Speed += 30;
+	}
+	
 	CurrentTile->SetActorScale3D(PrevTile->GetActorScale3D());
 	bCanMove = true;
 	CurrentColor = SetColor();
@@ -98,11 +104,11 @@ void AStackSpawner::SpawnTile() {
 
 }
 
-void AStackSpawner::MoveTile(float deltaTime, float speed) {
+void AStackSpawner::MoveTile(float deltaTime) {
 	if (bIsOnLeft)
-		CurrentTile->AddActorWorldOffset(FVector(deltaTime * speed * -1, 0, 0));
+		CurrentTile->AddActorWorldOffset(FVector(deltaTime * Speed * -1, 0, 0));
 	else
-		CurrentTile->AddActorWorldOffset(FVector(0, deltaTime * speed * -1, 0));
+		CurrentTile->AddActorWorldOffset(FVector(0, deltaTime * Speed * -1, 0));
 }
 
 void AStackSpawner::StackFire() {
@@ -196,9 +202,9 @@ void AStackSpawner::RemainderRight(bool bCanSpawn, float remainderScaleY) {
 		PrevTile->GetActorBounds(false, origin, BoxExtent);
 		Loc.Y += BoxExtent.Y * UKismetMathLibrary::SignOfFloat(remainderScaleY);
 		Scale.Y = UKismetMathLibrary::Abs(remainderScaleY);
-		ATileReminder* tempTile = nullptr;
-		if (RemainderClass)
-			tempTile = GetWorld()->SpawnActor<ATileReminder>(RemainderClass, Loc, FRotator(0, 0, 0));
+		ATile* tempTile = nullptr;
+		if (ReminderClass)
+			tempTile = GetWorld()->SpawnActor<ATile>(ReminderClass, Loc, FRotator(0, 0, 0));
 		if (tempTile) {
 			tempTile->SetActorScale3D(Scale);
 			tempTile->StaticMesh->SetVectorParameterValueOnMaterials(TEXT("BASE"), CurrentColor);
@@ -215,13 +221,12 @@ void AStackSpawner::RemainderLeft(bool bCanSpawn, float remainderScaleX) {
 		PrevTile->GetActorBounds(false, origin, BoxExtent);
 		Loc.X += BoxExtent.X * UKismetMathLibrary::SignOfFloat(remainderScaleX);
 		Scale.X = UKismetMathLibrary::Abs(remainderScaleX);
-		ATileReminder* tempTile = nullptr;
-		if (RemainderClass) {
-			tempTile = GetWorld()->SpawnActor<ATileReminder>(RemainderClass, Loc, FRotator(0, 0, 0));
+		ATile* tempTile = nullptr;
+		if (ReminderClass) {
+			tempTile = GetWorld()->SpawnActor<ATile>(ReminderClass, Loc, FRotator(0, 0, 0));
 		}
 		
 		if (tempTile) {
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, TEXT("ALO"), false);
 			tempTile->SetActorScale3D(Scale);
 			tempTile->StaticMesh->SetVectorParameterValueOnMaterials(TEXT("BASE"), CurrentColor);
 		}
